@@ -80,9 +80,9 @@ app.use((req,res,next)=>{
 })
 
 // root index
-// app.get("/",(req,res)=>{
-//     res.send("Hi, I am root");
-// })
+app.get("/",(req,res)=>{
+    res.redirect("/listings");
+})
 
 // app.get("/demoUser",async (req,res)=>{
 //     let fakeUser=new User({
