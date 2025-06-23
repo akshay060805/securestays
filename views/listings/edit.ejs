@@ -1,0 +1,62 @@
+<% layout('/layouts/boilerplate') %>
+<body>
+    <div class="row mt-3">
+        <div class="col-8 offset-2">
+            <h3>Edit Your Listing</h3>
+            <form method="POST" action="/listings/<%= listing._id %>?_method=PUT" novalidate class="needs-validation" enctype="multipart/form-data">
+                <div class="mb-3">
+                    <label for="title" class="form-label">Title</label>
+                    <input type="text" name="Listing[title]" placeholder="Add a catchy title" class="form-control" id="title" value="<%= listing.title %>" required>
+                    <div class="valid-feedback">Title Looks good!</div>
+                    <div class="invalid-feedback">Please provide a title.</div>
+                </div>
+                <div class="mb-3">
+                    <label for="description" class="form-label">Description</label>
+                    <textarea name="Listing[description]" class="form-control" id="description" required><%= listing.description %></textarea>
+                    <div class="valid-feedback">Description Looks good!</div>
+                    <div class="invalid-feedback">Please provide a description.</div>
+                </div>
+                <div class="mb-3">
+                    Original Listing Image
+                    <br>
+                    <img src="<%= originalImageUrl %>" alt="">
+                </div>
+                <div class="mb-3">
+                    <label for="image" class="form-label">Upload New Image</label>
+                    <input type="file" name="Listing[image]" class="form-control" id="image">
+                    <!-- <div class="valid-feedback">Image URL Looks good!</div> -->
+                    <!-- <div class="invalid-feedback">Please provide an image URL.</div> -->
+                </div>
+                <div class="row">
+                    <div class="mb-3 col-md-4">
+                        <label for="price" class="form-label">Price</label>
+                        <input type="number" name="Listing[price]" placeholder="1200" class="form-control" id="price" value="<%= listing.price %>" required>
+                        <div class="valid-feedback">Price Looks good!</div>
+                        <div class="invalid-feedback">Please provide a price.</div>
+                    </div>
+                    <div class="mb-3 col-md-8">
+                        <label for="country" class="form-label">Country</label>
+                        <input type="text" name="Listing[country]" placeholder="India" class="form-control" id="country" value="<%= listing.country %>" required>
+                        <div class="valid-feedback">Country Looks good!</div>
+                        <div class="invalid-feedback">Please provide a country.</div>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label for="location" class="form-label">Location</label>
+                    <input type="text" name="Listing[location]" placeholder="Hyderabad, Telangana" class="form-control" id="location" value="<%= listing.location %>" required>
+                    <div class="valid-feedback">Location Looks good!</div>
+                    <div class="invalid-feedback">Please provide a location.</div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Category</label><br>
+                    <% const allCategories = ["trending", "rooms", "iconic-cities", "mountains", "beach", "pool", "camping", "farms", "arctic"]; %>
+                    <% allCategories.forEach(cat => { %>
+                        <input type="checkbox" name="Listing[category]" value="<%= cat %>" 
+                        <%= listing.category.includes(cat) ? "checked" : "" %>> <%= cat.charAt(0).toUpperCase() + cat.slice(1) %><br>
+                    <% }) %>
+                </div>
+                <button class="btn btn-dark edit-btn mb-3">Edit</button>
+            </form>
+        </div>
+    </div>
+</body>
