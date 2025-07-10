@@ -1,49 +1,90 @@
 <% layout('/layouts/boilerplate') %>
 <body>
-    <div id="filters">
-        <div class="filter">
-            <div><a class="navbar-brand" href="/listings?category=trending"><i class="fa-solid fa-fire"></i></a></div>
-            <p>Trending</p>
-        </div>
-        <div class="filter">
-            <div><a class="navbar-brand" href="/listings?category=rooms"><i class="fa-solid fa-bed"></i></a></div>
-            <p>Rooms</p>
-        </div>
-        <div class="filter">
-            <div><a class="navbar-brand" href="/listings?category=iconic-cities"><i class="fa-solid fa-mountain-city"></i></a></div>
-            <p>Iconic cities</p>
-        </div>
-        <div class="filter">
-            <div><a class="navbar-brand" href="/listings?category=mountains"><i class="fa-solid fa-mountain"></i></a></div>
-            <p>Mountains</p>
-        </div>
-        <div class="filter">
-            <div><a class="navbar-brand" href="/listings?category=beach"><i class="fa-solid fa-umbrella-beach"></i></a></div>
-            <p>Beach</p>
-        </div>
-        <div class="filter">
-            <div><a class="navbar-brand" href="/listings?category=pool"><i class="fa-solid fa-person-swimming"></i></a></div>
-            <p>Amazing Pools</p>
-        </div>
-        <div class="filter">
-            <div><a class="navbar-brand" href="/listings?category=camping"><i class="fa-solid fa-campground"></i></a></div>
-            <p>Camping</p>
-        </div>
-        <div class="filter">
-            <div><a class="navbar-brand" href="/listings?category=farms"><i class="fa-solid fa-cow"></i></a></div>
-            <p>Farms</p>
-        </div>
-        <div class="filter">
-            <div><a class="navbar-brand" href="/listings?category=arctic"><i class="fa-solid fa-snowflake"></i></a></div>
-            <p>Arctic</p>
-        </div>
-        <div class="tax-toggle">
-            <div class="form-check-reverse form-switch">
-                <input class="form-check-input" type="checkbox" role="switch" id="switchCheckDefault">
-                <label class="form-check-label" for="switchCheckDefault">Display total after taxes</label>
+    <% if(currUser){ %>
+        <div id="filters">
+            <div class="filter">
+                <a class="navbar-brand" href="/listings?category=trending">
+                    <div><i class="fa-solid fa-fire"></i></div>
+                    <p>Trending</p>
+                </a>
+            </div>
+            <div class="filter">
+                <a class="navbar-brand" href="/listings?category=rooms">
+                    <div><i class="fa-solid fa-bed"></i></div>
+                    <p>Rooms</p>
+                </a>
+            </div>
+            <div class="filter">
+                <a class="navbar-brand" href="/listings?category=iconic-cities">
+                    <div><i class="fa-solid fa-mountain-city"></i></div>
+                    <p>Iconic cities</p>
+                </a>
+            </div>
+            <div class="filter">
+                <a class="navbar-brand" href="/listings?category=mountains">
+                    <div><i class="fa-solid fa-mountain"></i></div>
+                    <p>Mountains</p>
+                </a>
+            </div>
+            <div class="filter">
+                <a class="navbar-brand" href="/listings?category=beach">
+                    <div><i class="fa-solid fa-umbrella-beach"></i></div>
+                    <p>Beach</p>
+                </a>
+            </div>
+            <div class="filter">
+                <a class="navbar-brand" href="/listings?category=pool">
+                    <div><i class="fa-solid fa-person-swimming"></i></div>
+                    <p>Amazing Pools</p>
+                </a>
+            </div>
+            <div class="filter">
+                <a class="navbar-brand" href="/listings?category=camping">
+                    <div><i class="fa-solid fa-campground"></i></div>
+                    <p>Camping</p>
+                </a>
+            </div>
+            <div class="filter">
+                <a class="navbar-brand" href="/listings?category=farms">
+                    <div><i class="fa-solid fa-cow"></i></div>
+                    <p>Farms</p>
+                </a>
+            </div>
+            <div class="filter">
+                <a class="navbar-brand" href="/listings?category=arctic">
+                    <div><i class="fa-solid fa-snowflake"></i></div>
+                    <p>Arctic</p>
+                </a>
             </div>
         </div>
-    </div>
+        <hr>
+        <div class="row">
+            <div class="d-flex flex-lg-row flex-column justify-content-evenly align-items-center">
+                <form method="GET" action="/listings" class="needs-validation position-relative d-flex align-items-center mb-2" novalidate>
+                    <label for="locationInput" class="form-label">Location:</label>
+                    <div class="ms-3 col-md-8 position-relative">
+                        <input type="text" class="form-control border-secondary" id="locationInput" name="location" autocomplete="off">
+                        <div id="location-suggestions" class="list-group position-absolute z-3"></div>
+                        <div class="valid-feedback">Looks good!</div>
+                    </div>
+                    <button type="submit" class="btn btn-outline-success ms-3">Filter</button>
+                </form>
+                <div>
+                    <% if (filters.category || filters.location) { %>
+                        <strong>Active Filters:</strong>
+                        <% if (filters.location) { %>
+                            <span class="badge bg-info text-light me-1">Location: <%= filters.location %></span>
+                        <% } %>
+                        <% if (filters.category) { %>
+                            <span class="badge bg-info text-light me-1">Category: <%= filters.category %></span>
+                        <% } %>
+                        <a href="/listings"><button type="button" class="btn btn-outline-warning">Reset Filter</button></a>
+                    <% } %>
+                </div>
+            </div>
+        </div>
+        <hr>
+    <% } %>
     <div class="row row-cols-lg-3 row-cols-md-2 row-cols-sm-1 mt-3">
         <% for(let listing of alllistings){ %>
             <a href="/listings/<%= listing._id %>" class="listing-link">
@@ -55,25 +96,12 @@
                             <b><%= listing.title %></b>
                             <br>
                             &#8377; <%= listing.price.toLocaleString("en-IN") %>/night
-                            <i class="tax-info">&nbsp;&nbsp;+18% GST</i>
+                            <br>
+                            <%= listing.location %>, <%= listing.country %>
                         </p>
                     </div>
                 </div>
             </a>
         <% } %>
      </div>
-     <script>
-        let taxSwitch=document.getElementById("switchCheckDefault");
-        taxSwitch.addEventListener("click",()=>{
-            let taxInfo=document.getElementsByClassName("tax-info");
-            for(info of taxInfo){
-                if(info.style.display!="inline"){
-                    info.style.display="inline";
-                }
-                else{
-                    info.style.display="none"
-                }
-            }
-        })
-     </script>
 </body>

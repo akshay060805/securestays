@@ -3,13 +3,16 @@ const ExpressError = require('../utils/ExpressError.js');
 const cloudinary = require('cloudinary').v2;
 
 module.exports.index=async (req,res)=>{
-    const {category}=req.query;
-    if(!category){
-        const alllistings = await Listing.find({});
-        return res.render("listings/index.ejs",{alllistings});
+    const {category,location}=req.query;
+    const filters={};
+    if(category){
+        filters.category=category;
     }
-    const alllistings = await Listing.find({category:category});
-    return res.render("listings/index.ejs",{alllistings});
+    if(location){
+        filters.location=new RegExp(location, "i");
+    }
+    const alllistings = await Listing.find(filters);
+    return res.render("listings/index.ejs",{alllistings,filters});
 }
 
 module.exports.newListingForm=(req,res)=>{
@@ -99,3 +102,12 @@ module.exports.deleteListing=async (req,res)=>{
     // console.log(deletedListing);
     res.redirect("/listings");
 }
+
+module.exports.locationSuggestion=async(req, res) => {
+    const allNames = await Listing.distinct("location");
+    const query = req.query.q?.toLowerCase() || '';
+    const suggestions = allNames
+        .filter(name => name.toLowerCase().includes(query))
+        .slice(0, 10); // Limit suggestions
+    res.json(suggestions);
+};

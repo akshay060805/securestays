@@ -21,6 +21,9 @@ router
 // New route
 router.get("/new",isLoggedIn,listingController.newListingForm);
 
+//location suggestion
+router.get('/suggestions/locations',isLoggedIn,wrapAsync(listingController.locationSuggestion));
+
 // Show route
 // Update route
 // Delete route
