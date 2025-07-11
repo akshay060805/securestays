@@ -30,26 +30,11 @@ module.exports.showListing=async (req,res)=>{
 }
 
 module.exports.createListing=async (req,res,next)=>{
-    const apiKey =process.env.MAP_KEY;
-    const query=req.body.Listing.location+","+req.body.Listing.country;
-    const mapurl = `https://api.tomtom.com/search/2/geocode/${encodeURIComponent(query)}.json?key=${apiKey}`;
-
-    const response = await fetch(mapurl);
-    const data = await response.json();
-
-    const { lat, lon } = data.results[0].position;
-    console.log(`Coordinates of "${query}":`, lat, lon); 
-
     let url=req.file.path;
     let filename=req.file.filename;
     const newListing = new Listing(req.body.Listing);
     newListing.owner=req.user._id;
     newListing.image={url,filename};
-    const geoData = {
-        type: "Point",
-        coordinates: [lon,lat] // [lon, lat]
-    };
-    newListing.geometry=geoData;
     let category=req.body.Listing.category;
     const categoryArray = Array.isArray(category) ? category : [category];
     newListing.category=categoryArray;
@@ -74,6 +59,14 @@ module.exports.updateListing=async (req,res)=>{
     let {id} = req.params;
     let listing=await Listing.findByIdAndUpdate(id,{...req.body.Listing});
     if(typeof req.file!=="undefined"){
+        if(listing.image&&listing.image.filename){
+            try{
+                await cloudinary.uploader.destroy(listing.image.filename);
+            }
+            catch(err){
+                throw new ExpressError(404,"Something went wrong!");
+            }
+        }
         let url=req.file.path;
         let filename=req.file.filename;
         listing.image={url,filename};
@@ -99,7 +92,6 @@ module.exports.deleteListing=async (req,res)=>{
         }
     }
     req.flash("success","Listing Deleted!");
-    // console.log(deletedListing);
     res.redirect("/listings");
 }
 
@@ -108,6 +100,6 @@ module.exports.locationSuggestion=async(req, res) => {
     const query = req.query.q?.toLowerCase() || '';
     const suggestions = allNames
         .filter(name => name.toLowerCase().includes(query))
-        .slice(0, 10); // Limit suggestions
+        .slice(0, 10);
     res.json(suggestions);
 };

@@ -24,8 +24,6 @@
                 <div class="mb-3">
                     <label for="image" class="form-label">Upload New Image</label>
                     <input type="file" name="Listing[image]" class="form-control" id="image">
-                    <!-- <div class="valid-feedback">Image URL Looks good!</div> -->
-                    <!-- <div class="invalid-feedback">Please provide an image URL.</div> -->
                 </div>
                 <div class="row">
                     <div class="mb-3 col-md-4">
@@ -50,12 +48,20 @@
                 <div class="mb-3">
                     <label class="form-label">Category</label><br>
                     <% const allCategories = ["trending", "rooms", "iconic-cities", "mountains", "beach", "pool", "camping", "farms", "arctic"]; %>
-                    <% allCategories.forEach(cat => { %>
-                        <input type="checkbox" name="Listing[category]" value="<%= cat %>" 
-                        <%= listing.category.includes(cat) ? "checked" : "" %>> <%= cat.charAt(0).toUpperCase() + cat.slice(1) %><br>
-                    <% }) %>
+                    <div class="row">
+                        <% allCategories.forEach(cat => { %>
+                            <div class="form-check col-md-3">
+                                <input type="checkbox" class="form-check-input" name="Listing[category]" id="<%= cat %>" value="<%= cat %>" 
+                                <%= listing.category.includes(cat) ? "checked" : "" %>>
+                                <label class="form-check-label" for="<%= cat %>"> <%= cat.charAt(0).toUpperCase() + cat.slice(1) %></label>
+                            </div>
+                        <% }) %>
+                    </div>
                 </div>
-                <button class="btn btn-dark edit-btn mb-3">Edit</button>
+                <div class="d-flex justify-content-between align-items-center">
+                    <button class="btn btn-dark edit-btn mb-3">Edit</button>
+                    <a href="/listings/<%= listing._id %>"><button class="btn btn-outline-danger mb-3">Cancel</button></a>
+                </div>
             </form>
         </div>
     </div>

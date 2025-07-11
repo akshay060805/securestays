@@ -26,17 +26,6 @@ const listingSchema = new Schema({
         type:Schema.Types.ObjectId,
         ref:"User"
     },
-    geometry:{
-        type:{
-            type:String,
-            enum:['Point'],
-            required:true
-        },
-        coordinates:{
-            type:[Number],
-            required:true
-        }
-    },
     category:{
         type:[String],
         enum:["trending","rooms","iconic-cities","mountains","beach","pool","camping","farms","arctic"],
